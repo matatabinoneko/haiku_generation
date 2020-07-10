@@ -23,11 +23,12 @@ def main(args):
     vocab.save(vocab_file=PREPROCESSED_DIR+'vocab_file.vocab')
     print("vocab size:{}".format(len(vocab)))
 
-#     max_length = -1
-#     with open(train_input_filepath, 'r') as f_t, open(dev_input_filepath, 'r') as f_d:
-#         for line in chain(f_t, f_d):
-#             max_length = max(max_length, len(line.rstrip().split()))
-    max_length = 17
+    max_length = -1
+    with open(train_input_filepath, 'r') as f_t, open(dev_input_filepath, 'r') as f_d:
+        for line in chain(f_t, f_d):
+            line = line.rstrip().split()
+            max_length = max(max_length, len(line))
+    # max_length = 17
 
     for file_name in [train_input_filepath, dev_input_filepath]:
         output_file = file_name.split('/')[-1] + '.preprocessed'

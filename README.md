@@ -1,2 +1,2 @@
-# haiku_generation
-俳句を自動生成するためのモデル
+# language-model
+練習で言語モデルを作成してみる

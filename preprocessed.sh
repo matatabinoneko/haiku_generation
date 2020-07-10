@@ -1,1 +1,1 @@
-python preprocessed.py -t ./data/tokenized/source_target_split/train.tokenized -d data/tokenized/source_target_split/dev.tokenized
+python preprocessed.py -t ./data/tokenized/source_target_split/train.interm.tokenized -d data/tokenized/source_target_split/dev.interm.tokenized

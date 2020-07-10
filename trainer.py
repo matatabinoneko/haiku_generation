@@ -1,3 +1,4 @@
+# from EncoderDecoder import Encoder_Decoder as ED
 from LanguageModel import LM
 import os
 import torch
@@ -51,7 +52,8 @@ class LanguageModelTrainer:
             num_token = 0
             step = 0
             for batch_count, batch in enumerate(self.data_loader):
-                state = None
+                state1 = None
+                state2 = None
 
                 batch = batch.to(self.device)
                 step += 1
@@ -60,7 +62,7 @@ class LanguageModelTrainer:
                 input_i = batch[:, :-1]
                 target_i = batch[:, 1:]
 
-                x, (h, c) = self.model(input_i, state)
+                x, state1, state2 = self.model(input_i, state1, state2)
 
                 vocab_size = x.size(2)
                 num_token_i = (target_i != pad).sum().item()  # 文章の長さを取得する
@@ -83,9 +85,13 @@ class LanguageModelTrainer:
                 self.optimizer.step()
                 loss_epoch += loss.item()
 
-                h = h.clone().detach()
-                c = c.clone().detach()
-                state = (h, c)
+                # h = state[0].clone().detach()
+                # c = state[1].clone().detach()
+                # state = (h, c)
+                state1 = (state1[0].clone().detach(),
+                          state1[1].clone().detach())
+                state2 = (state2[0].clone().detach(),
+                          state2[1].clone().detach())
 
                 elapsed = time.time() - start_at
                 # print(f'epoch:{epoch} step:{step}'
@@ -98,7 +104,7 @@ class LanguageModelTrainer:
             print('-' * 50)
             print(f'epoch:{epoch} loss:{loss_epoch:.2f}'
                   f' ppl:{ppl:.2f} elapsed:{elapsed:.2f}')
-            decoded = self.model.generate(start=None)
+            decoded = self.model.generate(prefix='')
             print(f'Sampled: {decoded}')
             print('-' * 50)
             if (epoch+1) % 10 == 0:

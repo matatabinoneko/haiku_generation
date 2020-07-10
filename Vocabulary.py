@@ -64,9 +64,13 @@ class Vocabulary:
             vocab_file, len(self.word2index)))
 
     def load_word_from_data(self, train_path, dev_path):
+        def count(f):
+            for line in f:
+                line = line.rstrip().split()
+                for word in line:
+                    yield word
         with open(train_path, 'r') as f_t, open(dev_path, 'r') as f_d:
-            counter = Counter(word for line in chain.from_iterable(
-                chain(f_t, f_d)) for word in line.rstrip().split())
-            for word,cnt in counter.most_common():
+            counter = Counter(count(chain(f_t, f_d)))
+            for word, cnt in counter.most_common():
                 self.add_word(word)
         # self.save(vocab_file='vocab_file')
